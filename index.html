@@ -1,8 +1,127 @@
-<html>
-  <head>
-    
-  </head>
-  <body>
-    <h1>Hello World</h1>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forecast</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #weather {
+            margin-top: 20px;
+        }
+        button {
+            border-radius: 20px;
+        }
+        .hover {
+            color: blue;
+        }
+        .active {
+            color: black;
+        }
+        input {
+            border-radius: 30px;
+        }
+    </style>
+</head>
+<body background="https://www.pixelstalk.net/wp-content/uploads/2016/07/Weather-Images-HD.jpg">
+    <h1>Weather Forecast</h1>
+    <input type="text" id="city" placeholder="Enter city name">
+    <button onclick="getWeather()">Get Weather</button>
+    <div id="weather"></div>
+    <a class="cur-con-weather-card is-desktop lbar-panel content-module " href="/en/in/dundigal/893287/current-weather/893287">
+        <div class="title-container">
+            <h2 class="cur-con-weather-card__title">
+                Current Weather
+            </h2>
+            <p class="cur-con-weather-card__subtitle">
+                9:17 AM
+            </p>
+        </div>
+        <div class="cur-con-weather-card__body">
+            <div class="cur-con-weather-card__panel">
+                <div class="forecast-container">
+                    <svg class="weather-icon" data-src="/images/weathericons/5.svg" viewBox="0 0 288 288" width="88" height="88"><g stroke-width="9.6" fill="none" fill-rule="evenodd"><path d="M156 36v48M12 180h48M223.872 112.128l33.936-33.936M88.128 112.128 54.192 78.192M122.4 248.928h67.2c32.168-15.65 49.27-51.44 41.24-86.3-8.03-34.86-39.066-59.56-74.84-59.56s-66.81 24.7-74.84 59.56c-8.03 34.86 9.072 70.65 41.24 86.3Z" stroke="#FF8700"/><path d="M275.856 248.928H36M132 180h144M36 213.6h143.952" stroke="#BABABA"/></g></svg>
+                    <div class="temp-container">
+                        <div class="temp">32&#xB0;<span class="after-temp">C</span></div>
+                        <div class="real-feel">
+                            RealFeel&#xAE;
+                            33&#xB0;
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <span class="phrase">Hazy sunshine</span>
+                    <span class="cur-con-weather-card__cta">
+                        <span class="text">More Details</span>
+                        <svg class="icon-chevron chevron-icon right" xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6"><path d="M10 .969L9.037 0 5 4.063.963 0 0 .969 5 6z" /></svg>
+                    </span>
+                </div>
+            </div>
+            <div class="cur-con-weather-card__panel details-container">
+                <div class="spaced-content detail">
+                    <span class="label">RealFeel Shade&#x2122;</span>
+                    <span class="value">32&#xB0;</span>
+                </div>
+                <div class="spaced-content detail">
+                    <span class="label">Wind</span>
+                    <span class="value">WNW 26 km/h</span>
+                </div>
+                <div class="spaced-content detail">
+                    <span class="label">Wind Gusts</span>
+                    <span class="value">53 km/h</span>
+                </div>
+                <div class="spaced-content detail">
+                    <span class="label">Air Quality</span>
+                    <span class="value" style="color: #FDB80D">Poor</span>
+                </div>
+            </div>
+        </div>
+    </a>
+
+
+
+    <script>
+        async function getWeather() {
+            const apiKey = '2dc36cc5f93a328a27b2f660f863f9d9'; // Replace with your OpenWeatherMap API key
+            const city = document.getElementById('city').value;
+            const weatherDiv = document.getElementById('weather');
+            weatherDiv.innerHTML = '';
+
+            if (city === '') {
+                weatherDiv.innerHTML = 'Please enter a city name.';
+                return;
+            }
+
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('City not found');
+                }
+                const data = await response.json();
+
+                const temperature = data.main.temp;
+                const humidity = data.main.humidity;
+                const description = data.weather[0].description;
+                const windSpeed = data.wind.speed;
+
+                weatherDiv.innerHTML = `
+                    <h2>Weather in ${city.charAt(0).toUpperCase() + city.slice(1)}</h2>
+                    <p>Temperature: ${temperature}°C</p>
+                    <p>Humidity: ${humidity}%</p>
+                    <p>Description: ${description.charAt(0).toUpperCase() + description.slice(1)}</p>
+                    <p>Wind Speed: ${windSpeed} m/s</p>
+                `;
+            } catch (error) {
+                weatherDiv.innerHTML = error.message;
+            }
+        }
+    </script>
+</body>
 </html>
+
